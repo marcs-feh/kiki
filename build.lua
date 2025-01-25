@@ -34,7 +34,7 @@ function Config()
 
 		executables = {
 			-- Kiki compiler (driver program)
-			['kikic'] = {
+			['kiki'] = {
 				sources  = {'src/driver.c'},
 				binaries = {'kiki.a'},
 				extra    = {'src/kiki.h'},
@@ -210,6 +210,8 @@ function Ninja:variables(tbl, indent)
 end
 
 --- Main
-Ninja:init('build.ninja')
+local outfile = 'build.ninja'
+Ninja:init(outfile)
 Generate()
 Ninja:done()
+print('Updated ' .. outfile)
