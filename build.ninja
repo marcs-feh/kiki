@@ -1,0 +1,19 @@
+ldflags = -lm
+compiler = clang
+cflags = -I. -fPIC -fno-strict-aliasing -Wall -Wextra -O0 -g
+archiver = ar
+linker = clang
+
+rule compile
+  command = $compiler $cflags -c $in -o $out
+rule link
+  command = $linker -o $out $in $ldflags
+rule archive
+  command = $archiver rcs $out $in
+
+build src/driver.c.o: compile src/driver.c | src/kiki.h
+build kikic: link src/driver.c.o kiki.a | kiki.a src/kiki.h
+build src/lexer.c.o: compile src/lexer.c | src/kiki.h
+build src/parser.c.o: compile src/parser.c | src/kiki.h
+build src/checker.c.o: compile src/checker.c | src/kiki.h
+build kiki.a: archive src/lexer.c.o src/parser.c.o src/checker.c.o | src/kiki.h
