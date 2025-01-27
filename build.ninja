@@ -1,7 +1,7 @@
 compiler = clang
-ldflags = -lm
-cflags = -I. -fPIC -fno-strict-aliasing -Wall -Wextra -O0 -g
 linker = clang
+cflags = -I. -fPIC -fno-strict-aliasing -Wall -Wextra -O0 -g
+ldflags = -lm
 archiver = ar
 
 rule compile
