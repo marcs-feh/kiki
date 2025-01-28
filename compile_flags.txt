@@ -1,0 +1,2 @@
+-std=c11
+-DTARGET_OS_LINUX=1
