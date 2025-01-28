@@ -1,6 +1,8 @@
+#ifndef _strings_h_include_
+#define _strings_h_include_
+
 #include "base.h"
 
-//// UTF-8 /////////////////////////////////////////////////////////////////////
 typedef struct UTF8Encode UTF8Encode;
 typedef struct UTF8Decode UTF8Decode;
 typedef struct UTF8Iterator UTF8Iterator;
@@ -8,58 +10,57 @@ typedef struct UTF8Iterator UTF8Iterator;
 // UTF-8 encoding result, a len = 0 means an error.
 struct UTF8Encode {
 	U8 bytes[4];
-	i8 len;
+	I8 len;
 };
 
 // UTF-8 encoding result, a len = 0 means an error.
 struct UTF8Decode {
-	rune codepoint;
-	i8 len;
+	Rune codepoint;
+	I8 len;
 };
 
-// The error rune
-#define UTF8_ERROR ((rune)(0xfffd))
+// The error Rune
+#define UTF8_ERROR ((Rune)(0xfffd))
 
-// The error rune, U8 encoded
+// The error Rune, U8 encoded
 static const UTF8Encode UTF8_ERROR_ENCODED = {
 	.bytes = {0xef, 0xbf, 0xbd},
 	.len = 0,
 };
 
-// Encode a unicode rune
-UTF8Encode utf8_encode(rune c);
+// Encode a unicode Rune
+UTF8Encode utf8_encode(Rune c);
 
-// Decode a rune from a UTF8 buffer of bytes
+// Decode a Rune from a UTF8 buffer of bytes
 UTF8Decode utf8_decode(U8 const* data, Size len);
 
-// Allows to iterate a stream of bytes as a sequence of runes
+// Allows to iterate a stream of bytes as a sequence of Runes
 struct UTF8Iterator {
 	U8 const* data;
 	Size data_length;
 	Size current;
 };
 
-// Steps iterator forward and puts rune and Length advanced into pointers,
+// Steps iterator forward and puts Rune and Length advanced into pointer
 // returns false when finished.
-bool utf8_iter_next(UTF8Iterator* iter, rune* r, i8* len);
+bool utf8_iter_next(UTF8Iterator* iter, UTF8Decode* out);
 
-// Steps iterator backward and puts rune and its length into pointers,
+// Steps iterator backward and puts Rune and its length into pointer
 // returns false when finished.
-bool utf8_iter_prev(UTF8Iterator* iter, rune* r, i8* len);
+bool utf8_iter_prev(UTF8Iterator* iter, UTF8Decode* out);
 
-//// Strings ///////////////////////////////////////////////////////////////////
 typedef struct String String;
 
-#define str_lit(CstrLit) (String){ .data = (U8 const*)(CstrLit), .len = (sizeof(CstrLit) - 1) }
+#define str_lit(CstrLit) (String){ .data = (byte const*)(CstrLit), .len = (sizeof(CstrLit) - 1) }
 
 struct String {
-	U8 const * data;
-	Size _length;
+	U8 const * v;
+	Size len;
 };
 
 static inline
 Size cstring_len(char const* cstr){
-	static const Size CSTR_MAX_LENGTH = (~(u32)0) >> 1;
+	static const Size CSTR_MAX_LENGTH = (~(U32)0) >> 1;
 	Size size = 0;
 	for(Size i = 0; i < CSTR_MAX_LENGTH && cstr[i] != 0; i += 1){
 		size += 1;
@@ -121,3 +122,5 @@ UTF8Iterator str_iterator_reversed(String s);
 // Is string empty?
 bool str_empty(String s);
 
+
+#endif /* Include guard */

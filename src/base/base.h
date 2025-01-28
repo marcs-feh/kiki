@@ -8,6 +8,7 @@
 #include <stdalign.h>
 #include <stdnoreturn.h>
 #include <stdatomic.h>
+#include <limits.h>
 
 #define nil NULL
 
@@ -52,23 +53,7 @@ static_assert(sizeof(void(*)(void)) == sizeof(Uintptr), "Mismatched pointer type
 static_assert(sizeof(Size) == sizeof(size_t), "Mismatched size");
 static_assert(CHAR_BIT == 8, "Invalid char size");
 
-typedef struct String String;
-
-#define str_lit(CstrLit) (String){ .data = (byte const*)(CstrLit), .len = (sizeof(CstrLit) - 1) }
-
-struct String {
-	U8 const * v;
-	isize _length;
-};
-
-static inline
-isize cstring_len(char const* cstr){
-	static const isize CSTR_MAX_LENGTH = (~(u32)0) >> 1;
-	isize size = 0;
-	for(isize i = 0; i < CSTR_MAX_LENGTH && cstr[i] != 0; i += 1){
-		size += 1;
-	}
-	return size;
-}
+#define halt_and_catch_fire() do { __builtin_trap(); }while(0)
+#define ensure(Pred, Msg) do { if(!(Pred)) { halt_and_catch_fire(); } } while(0)
 
 #endif /* Include guard */
