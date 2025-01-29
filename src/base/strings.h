@@ -49,15 +49,6 @@ bool utf8_iter_next(UTF8Iterator* iter, UTF8Decode* out);
 // returns false when finished.
 bool utf8_iter_prev(UTF8Iterator* iter, UTF8Decode* out);
 
-typedef struct String String;
-
-#define str_lit(CstrLit) (String){ .data = (byte const*)(CstrLit), .len = (sizeof(CstrLit) - 1) }
-
-struct String {
-	U8 const * v;
-	Size len;
-};
-
 static inline
 Size cstring_len(char const* cstr){
 	static const Size CSTR_MAX_LENGTH = (~(U32)0) >> 1;
@@ -88,9 +79,6 @@ Size str_codepoint_offset(String s, Size n);
 
 // Clone a string
 // String str_clone(String s, Mem_Allocator allocator);
-
-// Destroy a string
-// void str_destroy(String s, Mem_Allocator allocator);
 
 // Concatenate 2 strings
 // String str_concat(String a, String b, Mem_Allocator allocator);

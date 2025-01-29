@@ -53,7 +53,25 @@ static_assert(sizeof(void(*)(void)) == sizeof(Uintptr), "Mismatched pointer type
 static_assert(sizeof(Size) == sizeof(size_t), "Mismatched size");
 static_assert(CHAR_BIT == 8, "Invalid char size");
 
-#define halt_and_catch_fire() do { __builtin_trap(); }while(0)
-#define ensure(Pred, Msg) do { if(!(Pred)) { halt_and_catch_fire(); } } while(0)
+static inline noreturn
+void panic() {
+	__builtin_trap();
+}
+
+static inline
+void ensure(bool pred, char const * msg){
+	if(!(pred)){
+		panic();
+	}
+}
+
+typedef struct String String;
+
+#define StrLit(cslit) (String){ .data = (byte const*)(cslit), .len = (sizeof(cslit) - 1) }
+
+struct String {
+	U8 const * v;
+	Size len;
+};
 
 #endif /* Include guard */
