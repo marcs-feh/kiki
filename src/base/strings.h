@@ -37,7 +37,7 @@ UTF8Decode utf8_decode(U8 const* data, Size len);
 // Allows to iterate a stream of bytes as a sequence of Runes
 struct UTF8Iterator {
 	U8 const* data;
-	Size data_length;
+	Size len;
 	Size current;
 };
 

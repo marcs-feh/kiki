@@ -58,9 +58,18 @@ void panic() {
 	__builtin_trap();
 }
 
+#ifndef NO_STDIO
+extern int printf(const char*, ...);
+#endif
+
 static inline
 void ensure(bool pred, char const * msg){
 	if(!(pred)){
+		#ifndef NO_STDIO
+		printf("Assertion failed: %s\n", msg);
+		#else
+		(void)msg;
+		#endif
 		panic();
 	}
 }
