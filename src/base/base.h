@@ -53,14 +53,21 @@ static_assert(sizeof(void(*)(void)) == sizeof(Uintptr), "Mismatched pointer type
 static_assert(sizeof(Size) == sizeof(size_t), "Mismatched size");
 static_assert(CHAR_BIT == 8, "Invalid char size");
 
-static inline noreturn
-void panic() {
-	__builtin_trap();
-}
-
 #ifndef NO_STDIO
 extern int printf(const char*, ...);
 #endif
+
+static inline noreturn
+void panic(char const * msg) {
+	#ifndef NO_STDIO
+	if(msg)
+		printf("Panic: %s\n", msg);
+	#else
+	(void)msg;
+	#endif
+	__builtin_trap();
+}
+
 
 static inline
 void ensure(bool pred, char const * msg){
@@ -70,9 +77,10 @@ void ensure(bool pred, char const * msg){
 		#else
 		(void)msg;
 		#endif
-		panic();
+		panic(NULL);
 	}
 }
+
 
 typedef struct String String;
 

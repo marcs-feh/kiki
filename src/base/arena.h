@@ -9,9 +9,15 @@ typedef struct Arena Arena;
 typedef enum ArenaKind ArenaKind;
 
 enum ArenaKind {
-	ArenaKind_Static = 0,
+	ArenaKind_Static = 0,  // Uses single fixed length buffer, it's the most basic type of arena.
 	ArenaKind_Dynamic = 1, // Can aquire more memory as needed
 	ArenaKind_Virtual = 2, // Uses a single buffer with a much larger address space, committing pages as necessary
+};
+
+enum ArenaFreeMode {
+	ArenaFreeMode_Retain = 0,    // Retain all memory when resetting (Recommended)
+	ArenaFreeMode_KeepFirst = 1, // De-allocate/De-Commit all children
+	ArenaFreeMode_FreeAll = 2,   // De-alloca/De-commit everything
 };
 
 #define ARENA_VIRTUAL_BLOCK_SIZE (16 * KiB)
@@ -24,7 +30,8 @@ struct Arena {
 	Size capacity;
 	Uintptr last_allocation;
 
-	U32 kind;
+	U16 kind;
+	U16 freePolicy;
 	U32 commited_blocks;
 	Arena* next;
 	ArenaDynamicAllocFunc backup_alloc;
