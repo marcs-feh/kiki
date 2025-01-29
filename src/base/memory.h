@@ -5,6 +5,10 @@
 
 #define mem_new(Type, Num, Alloc) mem_alloc((Alloc), sizeof(Type) * (Num), alignof(Type));
 
+#define KiB (1024ll)
+#define MiB (1024ll * 1024ll)
+#define GiB (1024ll * 1024ll * 1024ll)
+
 // Helper to use with printf "%.*s"
 #define fmt_str(buf) (int)((buf).len), (buf).v
 
@@ -28,39 +32,9 @@ Uintptr align_forward_ptr(Uintptr p, Uintptr a);
 // Align p to alignment a, this works for any positive non-zero alignment
 Size align_forward_size(Size p, Size a);
 
-typedef struct Arena Arena;
-
-typedef enum ArenaKind ArenaKind;
-
-enum ArenaKind {
-	ArenaKind_Static = 0,
-	ArenaKind_Dynamic = 1,
-	ArenaKind_Virtual = 2,
-};
-
-struct Arena {
-	Size offset;
-	Size capacity;
-	Uintptr last_allocation;
-	U32 kind;
-
-	U8* data;
-	Arena* next;
-};
-
-// Initialize a memory arena with a buffer
-void arena_init(Arena* a, U8* data, Size len);
-
-// Deinit the arena
-void arena_destroy(Arena *a);
-
-// Resize arena allocation in-place, gives back same pointer on success, null on failure
-void* arena_resize(Arena* a, void* ptr, Size new_size);
-
-// Reset arena, marking all its owned pointers as freed
-void arena_free_all(Arena* a);
-
-// Allocate `size` bytes aligned to `align`, return null on failure
-void *arena_alloc(Arena* a, Size size, Size align);
+static inline
+bool mem_valid_alignment(Size align){
+	return (align & (align - 1)) == 0 && (align != 0);
+}
 
 #endif /* Include guard */

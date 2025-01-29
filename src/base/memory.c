@@ -14,11 +14,6 @@
 #define mem_compare_impl         __builtin_memcmp
 #endif
 
-static inline
-bool mem_valid_alignment(Size align){
-	return (align & (align - 1)) == 0 && (align != 0);
-}
-
 void mem_set(void* p, U8 val, Size count){
 	mem_set_impl(p, val, count);
 }
@@ -53,64 +48,6 @@ Size align_forward_size(Size p, Size a){
 	return p;
 }
 
-Uintptr arena_required_mem(Uintptr cur, Size nU8s, Size align){
-	ensure(mem_valid_alignment(align), "Alignment must be a power of 2");
-	Uintptr aligned  = align_forward_ptr(cur, align);
-	Uintptr padding  = (Uintptr)(aligned - cur);
-	Uintptr required = padding + nU8s;
-	return required;
-}
-
-void *arena_alloc(Arena* a, Size size, Size align){
-	Uintptr base = (Uintptr)a->data;
-	Uintptr current = (Uintptr)base + (Uintptr)a->offset;
-
-	Uintptr available = (Uintptr)a->capacity - (current - base);
-	Uintptr required = arena_required_mem(current, size, align);
-
-	if(required > available){
-		return NULL;
-	}
-
-	a->offset += required;
-	void* allocation = &a->data[a->offset - size];
-	a->last_allocation = (Uintptr)allocation;
-	return allocation;
-}
-
-void arena_free_all(Arena* a){
-	a->offset = 0;
-}
-
-void* arena_resize(Arena* a, void* ptr, Size new_size){
-	if((Uintptr)ptr == a->last_allocation){
-		Uintptr base = (Uintptr)a->data;
-		Uintptr current = base + (Uintptr)a->offset;
-		Uintptr limit = base + (Uintptr)a->capacity;
-		Size last_allocation_size = current - a->last_allocation;
-
-		if((current - last_allocation_size + new_size) > limit){
-			return NULL; /* No space left*/
-		}
-
-		a->offset += new_size - last_allocation_size;
-		return ptr;
-	}
-
-	return NULL;
-}
-
-void arena_init(Arena* a, U8* data, Size len){
-	a->capacity = len;
-	a->data = data;
-	a->offset = 0;
-}
-
-void arena_destroy(Arena* a){
-	arena_free_all(a);
-	a->capacity = 0;
-	a->data = NULL;
-}
 
 #undef mem_set_impl
 #undef mem_copy_impl

@@ -36,6 +36,7 @@ BuildAll(){
 	Compile 'src/base/base.c'
 	Compile 'src/kiki.c'
 	Compile 'src/driver.c'
+	wait
 	Lib 'kiki.a' 'kiki.o' 'base.o'
 	Link 'kiki' 'driver.o' 'kiki.a'
 }
@@ -49,12 +50,12 @@ set -eu
 echo "Build mode: $mode"
 case "$mode" in
 	"debug")
-		cflags="-O0 -g $cflags"
+		cflags="-O1 -g $cflags"
 		BuildAll
 		Run ./kiki
 	;;
 	"release")
-		cflags="-O3 $cflags"
+		cflags="-Os $cflags"
 		BuildAll
 		Run strip ./kiki
 		Run ./kiki
