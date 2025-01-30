@@ -12,7 +12,7 @@ void* virtual_commit(void* ptr, Size len){
 	if(mprotect(ptr, len, PROT_READ | PROT_WRITE) < 0){
 		return NULL;
 	}
-	return ptr;
+	return ptr;	
 }
 
 void virtual_decommit(void* ptr, Size len){
@@ -23,3 +23,21 @@ void virtual_decommit(void* ptr, Size len){
 void virtual_release(void* ptr, Size len){
 	munmap(ptr, len);
 }
+
+static inline
+U32 _virtual_protect_flags(U8 prot){
+	U32 flag = 0;
+	if(prot & MemoryProtection_Exec)
+		flag |= PROT_EXEC;
+	if(prot & MemoryProtection_Read)
+		flag |= PROT_READ;
+	if(prot & MemoryProtection_Write)
+		flag |= PROT_WRITE;
+	return flag;
+}
+
+bool virtual_protect(void* ptr, Size len, U8 prot){
+	U32 flags = _virtual_protect_flags(prot);
+	return mprotect(ptr, len, flags) >= 0;
+}
+

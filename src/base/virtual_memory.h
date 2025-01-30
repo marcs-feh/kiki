@@ -3,8 +3,23 @@
 #include "base.h"
 #include "memory.h"
 
-// NOTE: Should ideally be a multiple of the platform's page size
-#define VIRTUAL_BLOCK_SIZE (16 * KiB)
+#define VIRTUAL_PAGE_SIZE (4 * KiB)
+
+typedef struct VirtualMemBlock  VirtualMemBlock;
+
+enum MemoryProtection {
+    MemoryProtection_Read  = (1 << 0),
+    MemoryProtection_Write = (1 << 1),
+    MemoryProtection_Exec  = (1 << 0),
+};
+
+struct VirtualMemBlock {
+    void* ptr;
+    Size commited;
+    Size reserved;
+};
+
+bool virtual_protect(void* ptr, Size len, U8 prot);
 
 void* virtual_reserve(Size len);
 

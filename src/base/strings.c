@@ -115,9 +115,6 @@ UTF8Decode utf8_decode(U8 const* buf, Size len){
 	return res;
 }
 
-// static inline
-// bool is_continuation_byte
-
 // Steps iterator forward and puts Rune and Length advanced into pointers,
 // returns false when finished.
 bool utf8_iter_next(UTF8Iterator* iter, UTF8Decode* out){
@@ -269,7 +266,7 @@ String str_trim_leading(String s, String cutset){
 	Size set_len = 0;
 	Size cut_after = 0;
 
-	decode_cutset: {
+	/* Decode cutset */ {
 		UTF8Decode dec = {0};
 		UTF8Iterator iter = str_iterator(cutset);
 
@@ -281,7 +278,7 @@ String str_trim_leading(String s, String cutset){
 		set_len = i;
 	}
 
-	strip_cutset: {
+	/* Strip cutset */ {
 		UTF8Decode dec = {0};
 		UTF8Iterator iter = str_iterator(s);
 
@@ -314,7 +311,7 @@ String str_trim_trailing(String s, String cutset){
 	Size set_len = 0;
 	Size cut_until = s.len;
 
-	decode_cutset: {
+	/* Decode cutset */ {
 		UTF8Decode dec = {0};
 		UTF8Iterator iter = str_iterator(cutset);
 
@@ -326,7 +323,7 @@ String str_trim_trailing(String s, String cutset){
 		set_len = i;
 	}
 
-	strip_cutset: {
+	/* Strip cutset */ {
 		UTF8Decode dec = {0};
 		UTF8Iterator iter = str_iterator_reversed(s);
 

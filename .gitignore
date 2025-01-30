@@ -1,6 +1,7 @@
 kikic
 kiki
 .ninja_log
+*.bin
 # Prerequisites
 *.d
 

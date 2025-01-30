@@ -8,5 +8,7 @@
 	#include "virtual_memory_linux.c"
 #elif defined(TARGET_OS_WINDOWS)
 	#include "virtual_memory_windows.c"
+#else
+	#error "Target OS not defined."
 #endif
 
