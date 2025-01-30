@@ -39,23 +39,4 @@ void arena_virt_test(){
 int main(){
     arena_buf_test();
     arena_virt_test();
-
-    VirtualMemBlock block = virtual_block_create(10 * GiB);
-    Size commit_step = 512 * MiB;
-    while(true){
-        char* p = virtual_block_push(&block, commit_step);
-        printf("%p\n", p);
-
-        if(p == NULL) break;
-
-        for(int i = 0; i < commit_step; i += 4000){
-            p[i] = 'a';
-        }
-    }
-    system("sleep 1s");
-    printf("De-commit\n");
-    virtual_block_decommit(&block);
-    printf("De-commited!\n");
-    system("sleep 10s");
-    printf("Done");
 }
