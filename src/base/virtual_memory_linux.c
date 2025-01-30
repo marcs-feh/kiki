@@ -20,7 +20,7 @@ void virtual_decommit(void* ptr, Size len){
 	madvise(ptr, len, MADV_FREE);
 }
 
-void virtual_release(void* ptr, Size len){
+void virtual_free(void* ptr, Size len){
 	munmap(ptr, len);
 }
 

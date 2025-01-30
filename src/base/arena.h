@@ -11,7 +11,7 @@ typedef enum ArenaKind ArenaKind;
 enum ArenaKind {
 	ArenaKind_Buffer = 0,  // Uses single fixed length buffer, it's the most basic type of arena.
 	ArenaKind_Dynamic = 1, // Can aquire more memory as needed
-	ArenaKind_Virtual = 2, // Uses a single buffer with a big reserved address space, committing pages as necessary
+	// ArenaKind_Virtual = 2, // Uses a single buffer with a big reserved address space, committing pages as necessary
 };
 
 #define ARENA_VIRTUAL_BLOCK_SIZE (16 * KiB)

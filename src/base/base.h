@@ -1,6 +1,8 @@
 #ifndef _base_h_include_
 #define _base_h_include_
 
+
+
 #include <stddef.h>
 #include <stdint.h>
 #include <stdbool.h>
@@ -68,7 +70,6 @@ void panic(char const * msg) {
 	__builtin_trap();
 }
 
-
 static inline
 void ensure(bool pred, char const * msg){
 	if(!(pred)){
@@ -80,7 +81,6 @@ void ensure(bool pred, char const * msg){
 		panic(NULL);
 	}
 }
-
 
 typedef struct String String;
 

@@ -40,8 +40,8 @@ Uintptr align_forward_ptr(Uintptr p, Uintptr a){
 }
 
 Size align_forward_size(Size p, Size a){
-	ensure(a > 0, "Invalid size alignment");
-	Size mod = p % a;
+	ensure(mem_valid_alignment(a), "Invalid size alignment");
+	Size mod = p & (a - 1);
 	if(mod > 0){
 		p += (a - mod);
 	}
