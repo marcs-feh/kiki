@@ -1,3 +1,5 @@
+#if defined(TARGET_OS_LINUX)
+
 #define _GNU_SOURCE
 #include "virtual_memory.h"
 #include <sys/mman.h>
@@ -41,3 +43,4 @@ bool virtual_protect(void* ptr, Size len, U8 prot){
 	return mprotect(ptr, len, flags) >= 0;
 }
 
+#endif

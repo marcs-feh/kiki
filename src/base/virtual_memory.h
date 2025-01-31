@@ -13,7 +13,7 @@ typedef struct VirtualMemBlock  VirtualMemBlock;
 enum MemoryProtection {
     MemoryProtection_Read  = (1 << 0),
     MemoryProtection_Write = (1 << 1),
-    MemoryProtection_Exec  = (1 << 0),
+    MemoryProtection_Exec  = (1 << 2),
 };
 
 // Region of virtual memory

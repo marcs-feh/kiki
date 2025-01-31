@@ -1,12 +1,12 @@
 #!/usr/bin/env sh
 
 compiler=gcc
-cflags='-DTARGET_OS_LINUX -fPIC -fno-strict-aliasing -Wall -Wextra -Wno-unused-label -Isrc'
+cflags='-DTARGET_OS_WINDOWS -fPIC -fno-strict-aliasing -Wall -Wextra -Wno-unused-label -Isrc'
 
-linker=clang
+linker=gcc
 ldflags=''
 
-archiver=ar
+archiver=gcc-ar
 arflags='rcs'
 
 Compile(){
