@@ -23,10 +23,9 @@ void virtual_block_destroy(VirtualMemBlock* block){
 
 // Commit n bytes of memory (page aligned) in block and return pointer to start of that memory.
 void* virtual_block_push(VirtualMemBlock* block, Size len){
-    void* base = &block->ptr[block->commited];
+    void* base = (U8*)block->ptr + block->commited;
     len = align_forward_size(len, VIRTUAL_PAGE_SIZE);
     if((block->commited + len) > block->reserved){ /* Out of reserved space*/
-        printf("OOM\n");
         return NULL;
     }
     void* ptr = virtual_commit(base, len);
