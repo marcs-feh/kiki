@@ -5,6 +5,7 @@
 #include "virtual_memory.h"
 
 void* virtual_reserve(Size len){
+	len = align_forward_size(len, VIRTUAL_PAGE_SIZE);
 	void* ptr = VirtualAlloc(NULL, len, MEM_RESERVE, PAGE_NOACCESS);
 	return ptr;
 }
@@ -38,7 +39,8 @@ bool virtual_protect(void* ptr, Size len, U8 prot){
 }
 
 void virtual_free(void* ptr, Size len){
-	panic("A");
+	(void)len;
+	VirtualFree(ptr, 0, MEM_RELEASE);
 }
 
 void virtual_decommit(void* ptr, Size len){
