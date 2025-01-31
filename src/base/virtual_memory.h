@@ -29,7 +29,7 @@ void virtual_block_destroy(VirtualMemBlock* block);
 
 void* virtual_block_push(VirtualMemBlock* block, Size len);
 
-void virtual_block_decommit(VirtualMemBlock* block);
+// void virtual_block_decommit(VirtualMemBlock* block);
 
 bool virtual_protect(void* ptr, Size len, U8 prot);
 

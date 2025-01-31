@@ -11,6 +11,7 @@ void* virtual_reserve(Size len){
 }
 
 void* virtual_commit(void* ptr, Size len){
+	ensure(((Uintptr)ptr & (VIRTUAL_PAGE_SIZE - 1)) == 0, "Pointer is not aligned to page boundary");
 	if(mprotect(ptr, len, PROT_READ | PROT_WRITE) < 0){
 		return NULL;
 	}
@@ -18,11 +19,13 @@ void* virtual_commit(void* ptr, Size len){
 }
 
 void virtual_decommit(void* ptr, Size len){
+	ensure(((Uintptr)ptr & (VIRTUAL_PAGE_SIZE - 1)) == 0, "Pointer is not aligned to page boundary");
 	mprotect(ptr, len, PROT_NONE);
 	madvise(ptr, len, MADV_FREE);
 }
 
 void virtual_free(void* ptr, Size len){
+	ensure(((Uintptr)ptr & (VIRTUAL_PAGE_SIZE - 1)) == 0, "Pointer is not aligned to page boundary");
 	munmap(ptr, len);
 }
 
@@ -39,6 +42,7 @@ U32 _virtual_protect_flags(U8 prot){
 }
 
 bool virtual_protect(void* ptr, Size len, U8 prot){
+	ensure(((Uintptr)ptr & (VIRTUAL_PAGE_SIZE - 1)) == 0, "Pointer is not aligned to page boundary");
 	U32 flags = _virtual_protect_flags(prot);
 	return mprotect(ptr, len, flags) >= 0;
 }

@@ -1,8 +1,6 @@
 #ifndef _base_h_include_
 #define _base_h_include_
 
-
-
 #include <stddef.h>
 #include <stdint.h>
 #include <stdbool.h>
