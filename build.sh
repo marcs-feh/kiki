@@ -3,10 +3,10 @@
 compiler=gcc
 cflags='-DTARGET_OS_LINUX -fPIC -fno-strict-aliasing -Wall -Wextra -Wno-unused-label -Isrc'
 
-linker=clang
+linker=gcc
 ldflags=''
 
-archiver=ar
+archiver=gcc-ar
 arflags='rcs'
 
 Compile(){
@@ -33,8 +33,8 @@ Run(){
 }
 
 BuildAll(){
-	Compile 'src/base/base.c'
-	Compile 'src/kiki.c'
+	Compile 'src/base/base.c' &
+	Compile 'src/kiki.c' &
 	Compile 'src/driver.c'
 	wait
 	Lib 'kiki.a' 'kiki.o' 'base.o'
