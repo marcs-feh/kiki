@@ -29,7 +29,9 @@ void virtual_init();
 
 MemoryBlock virtual_block_create(Size reserve);
 
-void* virtual_block_push_pages(MemoryBlock* block, Size len);
+void virtual_block_destroy(MemoryBlock* block);
+
+void* virtual_block_push(MemoryBlock* block, Size len);
 
 void virtual_block_pop_pages(MemoryBlock* block, Size len);
 
@@ -42,6 +44,7 @@ void virtual_free(void* ptr, Size len);
 void virtual_decommit(void* ptr, Size len);
 
 void* virtual_commit(void* ptr, Size len);
+
 
 static_assert(((VIRTUAL_PAGE_SIZE & (VIRTUAL_PAGE_SIZE - 1)) == 0) && (VIRTUAL_PAGE_SIZE > 0), "Page size must be a power of 2 greater than 0");
 #endif

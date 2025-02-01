@@ -16,7 +16,7 @@ void arena_buf_test(){
     Test(n != NULL);
 
     while(arena_alloc(&arena, 1, 1)){}
-    Test(arena.offset == arena.capacity);
+    Test(arena.offset == arena.data.reserved);
     Test(!arena_alloc(&arena, 1, 1));
 
     arena_free_all(&arena);

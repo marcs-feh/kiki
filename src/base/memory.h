@@ -26,15 +26,43 @@ I32 mem_compare(void const * a, void const * b, Size count);
 // to be faster then mem_copy
 void mem_copy_no_overlap(void* dest, void const * src, Size count);
 
-// Align p to alignment a, this only works if a is a non-zero power of 2
-Uintptr align_forward_ptr(Uintptr p, Uintptr a);
-
-// Align p to alignment a, this works for any positive non-zero alignment
-Size align_forward_size(Size p, Size a);
-
 static inline
 bool mem_valid_alignment(Size align){
 	return (align & (align - 1)) == 0 && (align != 0);
+}
+
+// Align p to alignment a, where alignment is a non-zero power of 2
+static inline
+Uintptr align_forward_ptr(Uintptr p, Uintptr a){
+	ensure(mem_valid_alignment(a), "Invalid memory alignment");
+	Uintptr mod = p & (a - 1);
+	if(mod > 0){
+		p += (a - mod);
+	}
+	return p;
+}
+
+// Align p to alignment a, where alignment is a non-zero power of 2
+static inline
+Size align_forward_size(Size p, Size a){
+	ensure(mem_valid_alignment(a), "Invalid size alignment");
+	Size mod = p & (a - 1);
+	if(mod > 0){
+		p += (a - mod);
+	}
+	return p;
+}
+
+// Align p to alignment a, where alignment is a non-zero power of 2
+static inline
+Uintptr align_backward_ptr(Uintptr p, Uintptr a){
+	return p & ~(a - 1);
+}
+
+// Align p to alignment a, where alignment is a non-zero power of 2
+static inline
+Size align_backward_size(Size p, Size a){
+	return p & ~(a - 1);
 }
 
 #endif /* Include guard */

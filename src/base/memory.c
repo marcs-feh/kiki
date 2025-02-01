@@ -30,24 +30,6 @@ I32 mem_compare(void const * a, void const * b, Size count){
 	return mem_compare_impl(a, b, count);
 }
 
-Uintptr align_forward_ptr(Uintptr p, Uintptr a){
-	ensure(mem_valid_alignment(a), "Invalid memory alignment");
-	Uintptr mod = p & (a - 1);
-	if(mod > 0){
-		p += (a - mod);
-	}
-	return p;
-}
-
-Size align_forward_size(Size p, Size a){
-	ensure(mem_valid_alignment(a), "Invalid size alignment");
-	Size mod = p & (a - 1);
-	if(mod > 0){
-		p += (a - mod);
-	}
-	return p;
-}
-
 
 #undef mem_set_impl
 #undef mem_copy_impl
