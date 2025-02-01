@@ -26,13 +26,21 @@ void* virtual_block_push(MemoryBlock* block, Size count){
 	if(new_ptr == NULL){
 		return NULL; /* Memory error */
 	}
+	block->commited += count;
 	return old_ptr;
 }
 
-void virtual_block_pop_pages(MemoryBlock* block, Size len){
-	Size desired_decommit = block->commited - len;
-	Uintptr free_offset = (Uintptr)block->ptr + desired_decommit;
-	free_offset = align_backward_size(free_offset, VIRTUAL_PAGE_SIZE);
+void virtual_block_pop(MemoryBlock* block, Size len){
+	len = clamp(0, len, block->commited);
+
+	Uintptr base = (Uintptr)block->ptr;
+	// Free pages *after* this location
+	Uintptr free_after = base + (block->commited - len);
+	free_after = align_forward_ptr(free_after, VIRTUAL_PAGE_SIZE);
+
+	Size amount_to_free = (base + block->commited) - free_after;
+	virtual_decommit((void*)free_after, amount_to_free);
+	block->commited -= amount_to_free;
 }
 
 #endif

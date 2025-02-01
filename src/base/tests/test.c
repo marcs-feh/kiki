@@ -33,8 +33,24 @@ void arena_buf_test(){
 static inline
 void arena_virt_test(){
     TEST_BEGIN("Arena (Virtual)");
+
+	Arena arena = {0};
+	Test(arena_init_virtual(&arena, 1 * GiB));
+
+	static const int count = 2049;
+	U32* n = arena_alloc(&arena, sizeof(U32) * count, alignof(U32));
+	Test(n != NULL);
+	printf("Reserve: %ld Commit: %ld\n", arena.data.reserved, arena.data.commited);
+	virtual_block_pop(&arena.data, 90000000);
+	virtual_block_push(&arena.data, 1000000);
+	printf("Reserve: %ld Commit: %ld\n", arena.data.reserved, arena.data.commited);
+	for(int i = 0; i < count; i ++){
+		n[i] = i;
+	}
+
     TEST_END;
 }
+
 #include <stdlib.h>
 int main(){
 	virtual_init();

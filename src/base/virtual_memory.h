@@ -33,7 +33,7 @@ void virtual_block_destroy(MemoryBlock* block);
 
 void* virtual_block_push(MemoryBlock* block, Size len);
 
-void virtual_block_pop_pages(MemoryBlock* block, Size len);
+void virtual_block_pop(MemoryBlock* block, Size len);
 
 bool virtual_protect(void* ptr, Size len, U8 prot);
 

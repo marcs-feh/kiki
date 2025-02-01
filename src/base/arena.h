@@ -26,6 +26,9 @@ struct Arena {
 // Initialize a memory arena from a buffer
 bool arena_init_buffer(Arena* a, U8* data, Size len);
 
+// Initialize a memory arena with a reserved virtual address space
+bool arena_init_virtual(Arena* a, Size reserve);
+
 // Deinit the arena
 void arena_destroy(Arena *a);
 

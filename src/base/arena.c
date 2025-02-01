@@ -3,7 +3,7 @@
 #include "virtual_memory.h"
 
 bool arena_init_buffer(Arena* a, U8* data, Size len){
-	if(a == NULL || len <= 0){ return false; }
+	if(len <= 0){ return false; }
 	mem_set(a, 0, sizeof(*a));
 	a->data = (MemoryBlock){
 		.commited = len,
@@ -11,7 +11,7 @@ bool arena_init_buffer(Arena* a, U8* data, Size len){
 		.ptr = data,
 	};
 	a->kind = ArenaKind_Buffer;
-	return false;
+	return true;
 }
 
 
@@ -21,6 +21,16 @@ Uintptr arena_required_mem(Uintptr cur, Size count, Size align){
 	Uintptr padding  = (Uintptr)(aligned - cur);
 	Uintptr required = padding + count;
 	return required;
+}
+
+bool arena_init_virtual(Arena* a, Size reserve){
+	if(reserve <= 0){ return false; }
+	mem_set(a, 0, sizeof(*a));
+	MemoryBlock data = virtual_block_create(reserve);
+	if(data.ptr == NULL){ return false; }
+	a->data = data;
+	a->kind = ArenaKind_Virtual;
+	return true;
 }
 
 void *arena_alloc(Arena* a, Size size, Size align){
