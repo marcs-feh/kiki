@@ -12,4 +12,7 @@
 #include "virtual_memory_linux.c"
 #include "virtual_memory_windows.c"
 
+#include "filesystem.h"
+#include "filesystem_linux.c"
+#include "filesystem_windows.c"
 
