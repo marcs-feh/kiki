@@ -1,9 +1,9 @@
 #!/usr/bin/env sh
 
-compiler=gcc
+compiler=clang
 cflags='-DTARGET_OS_LINUX -fPIC -fno-strict-aliasing -Wall -Wextra -Wno-unused-label -Isrc'
 
-linker=gcc
+linker=clang
 ldflags=''
 
 archiver=gcc-ar
@@ -56,6 +56,7 @@ case "$mode" in
 	;;
 	"release")
 		cflags="-Os $cflags"
+		ldflags="-flto $ldflags"
 		BuildAll
 		Run strip ./kiki
 		Run ./kiki
