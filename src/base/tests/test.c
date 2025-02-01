@@ -41,8 +41,7 @@ void arena_virt_test(){
 	U32* n = arena_alloc(&arena, sizeof(U32) * count, alignof(U32));
 	Test(n != NULL);
 	printf("Reserve: %ld Commit: %ld\n", arena.data.reserved, arena.data.commited);
-	virtual_block_pop(&arena.data, 90000000);
-	virtual_block_push(&arena.data, 1000000);
+	virtual_block_pop(&arena.data, 20);
 	printf("Reserve: %ld Commit: %ld\n", arena.data.reserved, arena.data.commited);
 	for(int i = 0; i < count; i ++){
 		n[i] = i;

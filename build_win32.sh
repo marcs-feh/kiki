@@ -1,12 +1,12 @@
 #!/usr/bin/env sh
 
-compiler=gcc
-cflags='-DTARGET_OS_WINDOWS -fPIC -fno-strict-aliasing -Wall -Wextra -Wno-unused-label -Isrc'
+compiler=clang
+cflags='-std=c17 -DTARGET_OS_WINDOWS -fno-strict-aliasing -Wall -Wextra -Wno-unused-label -Isrc'
 
-linker=gcc
+linker=clang
 ldflags=''
 
-archiver=gcc-ar
+archiver=llvm-ar
 arflags='rcs'
 
 Compile(){
@@ -38,7 +38,7 @@ BuildAll(){
 	Compile 'src/driver.c'
 	wait
 	Lib 'kiki.a' 'kiki.o' 'base.o'
-	Link 'kiki' 'driver.o' 'kiki.a'
+	Link 'kiki.exe' 'driver.o' 'kiki.a'
 }
 
 mode="$1"
@@ -52,13 +52,14 @@ case "$mode" in
 	"debug")
 		cflags="-O1 -g $cflags"
 		BuildAll
-		Run ./kiki
+		Run ./kiki.exe
 	;;
 	"release")
 		cflags="-Os $cflags"
+		ldflags="-flto $ldflags"
 		BuildAll
-		Run strip ./kiki
-		Run ./kiki
+		Run llvm-strip ./kiki.exe
+		Run ./kiki.exe
 	;;
 esac
 

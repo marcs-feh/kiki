@@ -6,9 +6,10 @@
 #include <stdbool.h>
 #include <stdarg.h>
 #include <stdalign.h>
-#include <stdnoreturn.h>
 #include <stdatomic.h>
 #include <limits.h>
+
+// DO **NOT** use <stdnoreturn.h> it is broken on windows.
 
 #define nil NULL
 
@@ -73,7 +74,7 @@ static_assert(CHAR_BIT == 8, "Invalid char size");
 extern int printf(const char*, ...);
 #endif
 
-static inline noreturn
+static inline _Noreturn
 void panic(char const * msg) {
 	#ifndef NO_STDIO
 	if(msg)
@@ -88,9 +89,9 @@ static inline
 void ensure(bool pred, char const * msg){
 	if(!(pred)){
 		#ifndef NO_STDIO
-		printf("Assertion failed: %s\n", msg);
+			printf("Assertion failed: %s\n", msg);
 		#else
-		(void)msg;
+			(void)msg;
 		#endif
 		panic(NULL);
 	}
