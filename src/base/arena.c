@@ -14,7 +14,6 @@ bool arena_init_buffer(Arena* a, U8* data, Size len){
 	return true;
 }
 
-
 Uintptr arena_required_mem(Uintptr cur, Size count, Size align){
 	ensure(mem_valid_alignment(align), "Alignment must be a power of 2");
 	Uintptr aligned  = align_forward_ptr(cur, align);
