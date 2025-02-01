@@ -30,6 +30,19 @@ typedef U32 Rune;
 typedef float  F32;
 typedef double F64;
 
+typedef _Atomic(uint8_t)  AtomicU8;
+typedef _Atomic(uint16_t) AtomicU16;
+typedef _Atomic(uint32_t) AtomicU32;
+typedef _Atomic(uint64_t) AtomicU64;
+
+typedef _Atomic(int8_t)  AtomicI8;
+typedef _Atomic(int16_t) AtomicI16;
+typedef _Atomic(int32_t) AtomicI32;
+typedef _Atomic(int64_t) AtomicI64;
+
+typedef _Atomic(Size)    AtomicSize;
+typedef _Atomic(Uintptr) AtomicUintptr;
+
 // This is to avoid conflict with stdlib's "abs()"
 #define abs_val(X) (( (X) < 0ll) ? -(X) : (X))
 
@@ -46,6 +59,9 @@ typedef double F64;
 typedef _Bool bool;
 #define static_assert(Pred, Msg) _Static_assert(Pred, Msg)
 #endif
+
+#define hint_likely(X) __builtin_expect(!!(X), 1)
+#define hint_unlikely(X) __builtin_expect(!!(X), 0)
 
 static_assert(sizeof(F32) == 4 && sizeof(F64) == 8, "Bad float size");
 static_assert(sizeof(void(*)(void)) == sizeof(void*), "Function pointers and data pointers must be of the same width");

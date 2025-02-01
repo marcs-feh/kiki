@@ -3,6 +3,7 @@
 
 #include "base.h"
 #include "memory.h"
+#include "virtual_memory.h"
 
 typedef struct Arena Arena;
 
@@ -15,8 +16,6 @@ enum ArenaKind {
 };
 
 #define ARENA_VIRTUAL_BLOCK_SIZE (16 * KiB)
-
-typedef void* (*ArenaDynamicAllocFunc)(Size count, Size align);
 
 struct Arena {
 	U8* data;
