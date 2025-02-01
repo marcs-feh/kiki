@@ -5,14 +5,15 @@
 #include <sys/mman.h>
 #include <unistd.h>
 
-U32 virtual_page_size(){
-	static bool init = false;
-	static U32 page_size = DEFAULT_VIRTUAL_PAGE_SIZE;
-	if(hint_unlikely(!init)){
-		page_size = getpagesize();
-		init = true;
+void virtual_init(){
+	static bool initialized = false;
+	if(!initialized){
+		U32 page_size = getpagesize();
+		if(page_size != VIRTUAL_PAGE_SIZE){
+			panic("Virtual memory constraints were not satisfied.");
+		}
+		initialized = true;
 	}
-	return page_size;
 }
 
 void* virtual_reserve(Size len){
@@ -21,7 +22,7 @@ void* virtual_reserve(Size len){
 }
 
 void* virtual_commit(void* ptr, Size len){
-	ensure(((Uintptr)ptr & (virtual_page_size() - 1)) == 0, "Pointer is not aligned to page boundary");
+	ensure(((Uintptr)ptr & (VIRTUAL_PAGE_SIZE - 1)) == 0, "Pointer is not aligned to page boundary");
 	if(mprotect(ptr, len, PROT_READ | PROT_WRITE) < 0){
 		return NULL;
 	}
@@ -29,13 +30,13 @@ void* virtual_commit(void* ptr, Size len){
 }
 
 void virtual_decommit(void* ptr, Size len){
-	ensure(((Uintptr)ptr & (virtual_page_size() - 1)) == 0, "Pointer is not aligned to page boundary");
+	ensure(((Uintptr)ptr & (VIRTUAL_PAGE_SIZE - 1)) == 0, "Pointer is not aligned to page boundary");
 	mprotect(ptr, len, PROT_NONE);
 	madvise(ptr, len, MADV_FREE);
 }
 
 void virtual_free(void* ptr, Size len){
-	ensure(((Uintptr)ptr & (virtual_page_size() - 1)) == 0, "Pointer is not aligned to page boundary");
+	ensure(((Uintptr)ptr & (VIRTUAL_PAGE_SIZE - 1)) == 0, "Pointer is not aligned to page boundary");
 	munmap(ptr, len);
 }
 
@@ -52,7 +53,7 @@ U32 _virtual_protect_flags(U8 prot){
 }
 
 bool virtual_protect(void* ptr, Size len, U8 prot){
-	ensure(((Uintptr)ptr & (virtual_page_size() - 1)) == 0, "Pointer is not aligned to page boundary");
+	ensure(((Uintptr)ptr & (VIRTUAL_PAGE_SIZE - 1)) == 0, "Pointer is not aligned to page boundary");
 	U32 flags = _virtual_protect_flags(prot);
 	return mprotect(ptr, len, flags) >= 0;
 }

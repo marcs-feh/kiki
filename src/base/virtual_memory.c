@@ -6,7 +6,7 @@
 #include "virtual_memory.h"
 
 MemoryBlock virtual_block_create(Size reserve){
-	reserve = align_forward_size(reserve, virtual_page_size());
+	reserve = align_forward_size(reserve, VIRTUAL_PAGE_SIZE);
 	MemoryBlock blk = {
 		.ptr = virtual_reserve(reserve), 
 		.commited = 0,

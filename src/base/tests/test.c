@@ -37,6 +37,7 @@ void arena_virt_test(){
 }
 #include <stdlib.h>
 int main(){
+	virtual_init();
     arena_buf_test();
     arena_virt_test();
 }
