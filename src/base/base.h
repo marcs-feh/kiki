@@ -74,6 +74,10 @@ static_assert(CHAR_BIT == 8, "Invalid char size");
 extern int printf(const char*, ...);
 #endif
 
+#if __STDC_VERSION__ < 202311L
+	#define typeof(X) __typeof__(X)
+#endif
+
 static inline _Noreturn
 void panic(char const * msg) {
 	#ifndef NO_STDIO
@@ -99,7 +103,7 @@ void ensure(bool pred, char const * msg){
 
 typedef struct String String;
 
-#define StrLit(cslit) (String){ .data = (byte const*)(cslit), .len = (sizeof(cslit) - 1) }
+#define str_literal(cslit) (String){ .v = (uint8_t const*)(cslit), .len = (sizeof(cslit) - 1) }
 
 struct String {
 	U8 const * v;
